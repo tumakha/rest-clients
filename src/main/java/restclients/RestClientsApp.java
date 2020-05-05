@@ -1,13 +1,13 @@
-package com.tumakha.restclients;
+package restclients;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RestClientsApplication {
+public class RestClientsApp {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RestClientsApplication.class, args);
+		SpringApplication.run(RestClientsApp.class, args);
 	}
 
 }

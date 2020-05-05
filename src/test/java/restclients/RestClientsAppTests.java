@@ -1,10 +1,10 @@
-package com.tumakha.restclients;
+package restclients;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RestClientsApplicationTests {
+class RestClientsAppTests {
 
 	@Test
 	void contextLoads() {
