@@ -8,9 +8,11 @@ import restclients.client.RestClient;
 import restclients.client.java.SimpleJavaClient;
 
 import java.io.*;
+import java.net.URL;
 import java.util.List;
 
 import static java.lang.String.format;
+import static restclients.client.HttpMethod.GET;
 
 
 /**
@@ -28,7 +30,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
   RequestRunner requestRunner;
 
   public PerformanceBenchmark() throws IOException {
-    requests = List.of(null);
+    requests = List.of(new ApiRequest(GET, new URL("https://www.upwork.com/api"), null, null));
   }
 
   @Override
@@ -42,22 +44,24 @@ public class PerformanceBenchmark implements CommandLineRunner {
   }
 
   private void testClient(RestClient restClient) {
+    System.out.println(restClient.getName());
     requestRunner.setRestClient(restClient);
 
     for (ApiRequest request : requests) {
-      sendRequests(request, 1, 1_000);
-      sendRequests(request, 2, 1_000);
-      sendRequests(request, 4, 1_000);
+      sendRequests(request, 4, 40);
+//      sendRequests(request, 1, 1_000);
+//      sendRequests(request, 2, 1_000);
+//      sendRequests(request, 4, 1_000);
     }
-
     REPORT_WRITER.flush();
   }
 
   private void sendRequests(ApiRequest request, int threads, int requestsNum) {
     TimeStats stats = requestRunner.run(request, threads, requestsNum);
+    String requestName = request.getMethod() + " " + request.getUrl().getHost();
 
-    REPORT_WRITER.println(format("%s,%s,%d,%d,%d,%.3f,%.3f,%.3f,%.3f",
-        requestRunner.getRestClient().getName(), request.getName(), threads, requestsNum,
+    REPORT_WRITER.println(format("%s,%s,%d,%d,%d,%d,%.3f,%.3f,%.3f",
+        requestRunner.getRestClient().getName(), requestName, threads, requestsNum,
         stats.getTotalTime(), stats.getTimePerRequest(), stats.getMin(), stats.getAvg(), stats.getMax()));
   }
 

@@ -7,8 +7,6 @@ import lombok.Value;
  */
 @Value
 public class ApiResponse {
-
   int code;
   String body;
-
 }

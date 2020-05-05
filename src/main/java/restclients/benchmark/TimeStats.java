@@ -8,7 +8,7 @@ import lombok.Value;
 @Value
 public class TimeStats {
   long totalTime;
-  double timePerRequest;
+  long timePerRequest;
   double min;
   double avg;
   double max;

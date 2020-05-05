@@ -8,12 +8,10 @@ import restclients.client.ApiResponse;
 import restclients.client.RestClient;
 import restclients.concurrent.ConcurrentRun;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-
-import static java.lang.String.format;
 
 /**
  * @author Yuriy Tumakha
@@ -23,41 +21,52 @@ import static java.lang.String.format;
 @Slf4j
 public class RequestRunner {
 
+  private static final double NANO_TO_MILLI = 1e6;
+
   private RestClient restClient;
 
-  public TimeStats run(ApiRequest request, int threads, int requests) {
-    List<Long> clientTime = Collections.synchronizedList(new ArrayList<>());
+  private ApiResponse sendRequest(ApiRequest r) throws IOException {
+    switch (r.getMethod()) {
+      case GET:
+        return restClient.get(r.getUrl(), r.getHeaders());
+      case POST:
+        return restClient.post(r.getUrl(), r.getHeaders(), r.getBody());
+      case DELETE:
+        return restClient.delete(r.getUrl(), r.getHeaders(), r.getBody());
+      default:
+        throw new IllegalArgumentException("Unsupported HTTP method " + r.getMethod());
+    }
+  }
+
+  public TimeStats run(ApiRequest r, int threads, int requestsNum) {
+    final List<Long> clientTime = Collections.synchronizedList(new ArrayList<>());
 
     long startTestTime = System.nanoTime();
 
-    new ConcurrentRun(threads, requests, () -> {
+    new ConcurrentRun(threads, requestsNum, () -> {
       long startRequestTime = System.nanoTime();
 
       try {
-        ApiResponse response = restClient.sendRequest(request);
+        ApiResponse response = sendRequest(r);
         if (response.getCode() >= 400) {
-          log.warn("{} returns {}: {}", request.getUrl(), response.getCode(), response.getBody());
+          log.warn("{} returns {}: {}", r.getUrl(), response.getCode(), response.getBody());
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        log.error("Request failed " + r.getUrl(), e);
       }
 
       clientTime.add(System.nanoTime() - startRequestTime);
     });
 
-    double nanoToMilli = 1e6;
+    long totalTime = (System.nanoTime() - startTestTime) / (long) NANO_TO_MILLI;
+    long avgPerRequest = totalTime / requestsNum;
+    double avg = clientTime.stream().mapToLong(l -> l).average().getAsDouble() / NANO_TO_MILLI;
+    double min = clientTime.stream().mapToLong(l -> l).min().getAsLong() / NANO_TO_MILLI;
+    double max = clientTime.stream().mapToLong(l -> l).max().getAsLong() / NANO_TO_MILLI;
 
-    long totalTime = (System.nanoTime() - startTestTime) / (long) nanoToMilli;
-    double avgPerRequest = totalTime / (double) requests;
-
-    log.debug(String.format("\n%d threads. %d parallel requests in %d ms. Average time per request: %.3f ms",
-        threads, requests, totalTime, avgPerRequest));
-
-    double avg = clientTime.stream().filter(Objects::nonNull).mapToLong(l -> l).average().getAsDouble() / nanoToMilli;
-    double min = clientTime.stream().filter(Objects::nonNull).mapToLong(l -> l).min().getAsLong() / nanoToMilli;
-    double max = clientTime.stream().filter(Objects::nonNull).mapToLong(l -> l).max().getAsLong() / nanoToMilli;
-
-    System.out.println(String.format("Request time on CLIENT (ms): min = %.3f, avg = %.3f, max = %.3f", min, avg, max));
+    System.out.println(String.format("%d requests by %d threads in %d ms = Average time per request: %d ms. " +
+        "Request time (ms): min = %.3f, avg = %.3f, max = %.3f",
+        requestsNum, threads, totalTime, avgPerRequest, min, avg, max));
     return new TimeStats(totalTime, avgPerRequest, min, avg, max);
   }
 
