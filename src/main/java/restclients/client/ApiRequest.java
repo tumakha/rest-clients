@@ -14,4 +14,9 @@ public class ApiRequest {
   URL url;
   Map<String, String> headers;
   String body;
+
+  public String getName() {
+    return method + " " + url.getHost();
+  }
+
 }

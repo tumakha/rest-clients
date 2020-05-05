@@ -48,11 +48,11 @@ public class RequestRunner {
 
       try {
         ApiResponse response = sendRequest(r);
-        if (response.getCode() >= 400) {
+        if (response.getCode() > 400) {
           log.warn("{} returns {}: {}", r.getUrl(), response.getCode(), response.getBody());
         }
       } catch (Exception e) {
-        log.error("Request failed " + r.getUrl(), e);
+        log.error("Request failed", e);
       }
 
       clientTime.add(System.nanoTime() - startRequestTime);
@@ -64,9 +64,9 @@ public class RequestRunner {
     double min = clientTime.stream().mapToLong(l -> l).min().getAsLong() / NANO_TO_MILLI;
     double max = clientTime.stream().mapToLong(l -> l).max().getAsLong() / NANO_TO_MILLI;
 
-    System.out.println(String.format("%d requests by %d threads in %d ms = Average time per request: %d ms. " +
-        "Request time (ms): min = %.3f, avg = %.3f, max = %.3f",
-        requestsNum, threads, totalTime, avgPerRequest, min, avg, max));
+    System.out.println(String.format("%s %d requests by %d threads in %d ms = Average time per request: %d ms. " +
+            "Request time (ms): min = %.3f, avg = %.3f, max = %.3f",
+        r.getName(), requestsNum, threads, totalTime, avgPerRequest, min, avg, max));
     return new TimeStats(totalTime, avgPerRequest, min, avg, max);
   }
 

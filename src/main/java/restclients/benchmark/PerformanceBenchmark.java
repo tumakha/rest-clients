@@ -8,11 +8,14 @@ import restclients.client.RestClient;
 import restclients.client.java.SimpleJavaClient;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.String.format;
-import static restclients.client.HttpMethod.GET;
+import static restclients.client.HttpMethod.*;
 
 
 /**
@@ -24,17 +27,20 @@ public class PerformanceBenchmark implements CommandLineRunner {
   private static final String REPORT_FILENAME = "rest-clients-performance.csv";
 
   private final PrintWriter REPORT_WRITER = new PrintWriter(new BufferedWriter(new FileWriter(new File(REPORT_FILENAME))));
-  private final List<ApiRequest> requests;
+  private List<ApiRequest> requests;
 
   @Autowired
   RequestRunner requestRunner;
 
+  @Autowired
+  Scenario scenario;
+
   public PerformanceBenchmark() throws IOException {
-    requests = List.of(new ApiRequest(GET, new URL("https://www.upwork.com/api"), null, null));
   }
 
   @Override
-  public void run(String... args) {
+  public void run(String... args) throws MalformedURLException {
+    requests = scenario.getRequests();
     REPORT_WRITER.println("REST Client,Request name,Threads,Requests,Total duration,Time per request,Min,Avg,Max");
 
     testClient(new SimpleJavaClient());
@@ -58,10 +64,9 @@ public class PerformanceBenchmark implements CommandLineRunner {
 
   private void sendRequests(ApiRequest request, int threads, int requestsNum) {
     TimeStats stats = requestRunner.run(request, threads, requestsNum);
-    String requestName = request.getMethod() + " " + request.getUrl().getHost();
 
     REPORT_WRITER.println(format("%s,%s,%d,%d,%d,%d,%.3f,%.3f,%.3f",
-        requestRunner.getRestClient().getName(), requestName, threads, requestsNum,
+        requestRunner.getRestClient().getName(), request.getName(), threads, requestsNum,
         stats.getTotalTime(), stats.getTimePerRequest(), stats.getMin(), stats.getAvg(), stats.getMax()));
   }
 
