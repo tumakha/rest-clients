@@ -1,0 +1,18 @@
+
+server.port: 8888
+
+spring:
+  main.banner-mode: 'OFF'
+
+management.endpoints.web.exposure.include:
+  - health
+  - heapdump
+  - env
+  - metrics
+
+logging.level:
+  org.springframework: WARN
+
+urls:
+  get: https://www.upwork.com/api/
+  post: https://www.upwork.com/api
