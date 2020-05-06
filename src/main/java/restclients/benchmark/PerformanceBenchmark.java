@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import restclients.benchmark.model.TimeStats;
+import restclients.client.impl.asynchttpclient.AsyncHttpRestClient;
 import restclients.client.impl.java11.Java11HttpClient;
 import restclients.client.model.ApiRequest;
 import restclients.client.RestClient;
@@ -42,6 +43,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
 
     testClient(new SimpleJavaClient());
     testClient(new Java11HttpClient());
+    testClient(new AsyncHttpRestClient());
 
     REPORT_WRITER.close();
   }
@@ -54,7 +56,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
       for (ApiRequest request : requests) {
         sendRequests(request, 1, 100);
         //sendRequests(request, 2, 100);
-        sendRequests(request, 4, 100);
+        sendRequests(request, 8, 100);
       }
       REPORT_WRITER.flush();
     }

@@ -49,9 +49,6 @@ public class RequestRunner {
 
       try {
         ApiResponse response = sendRequest(r);
-        if (response.getCode() > 400) {
-          log.warn("{} returns {}: {}", r.getUrl(), response.getCode(), response.getBody());
-        }
       } catch (Exception e) {
         log.error("Request failed", e);
       }

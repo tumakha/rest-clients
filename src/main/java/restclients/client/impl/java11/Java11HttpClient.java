@@ -31,9 +31,9 @@ public class Java11HttpClient implements RestClient {
 
     private static final Duration TIMEOUT = ofSeconds(10);
 
-    private ExecutorService executor = Executors.newCachedThreadPool();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
 
-    private HttpClient client = HttpClient.newBuilder()
+    private final HttpClient client = HttpClient.newBuilder()
             .version(Version.HTTP_2)
             .followRedirects(Redirect.NORMAL)
             .connectTimeout(TIMEOUT)
@@ -48,7 +48,8 @@ public class Java11HttpClient implements RestClient {
     @SneakyThrows
     @Override
     public ApiResponse send(HttpMethod method, URL url, Map<String, String> headers, String body) {
-        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(url.toURI()).timeout(TIMEOUT);
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                .uri(url.toURI()).timeout(TIMEOUT);
         ofNullable(headers).ifPresent(map -> map.forEach(requestBuilder::setHeader));
 
         if (method == GET) {
@@ -59,6 +60,9 @@ public class Java11HttpClient implements RestClient {
         HttpRequest request = requestBuilder.build();
 
         CompletableFuture<ApiResponse> completableFuture = client.sendAsync(request, BodyHandlers.ofString(UTF_8))
+                .exceptionally(e -> {
+                    throw new RuntimeException(e);
+                })
                 .thenApply(r -> new ApiResponse(r.statusCode(), r.body()));
         return completableFuture.get(TIMEOUT.getSeconds(), SECONDS);
     }
