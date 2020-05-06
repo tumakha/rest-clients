@@ -1,8 +1,8 @@
 package restclients.client.impl;
 
 import org.junit.jupiter.api.Test;
-import restclients.client.model.ApiResponse;
 import restclients.client.RestClient;
+import restclients.client.model.ApiResponse;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,6 +20,7 @@ import static org.hamcrest.core.StringContains.containsStringIgnoringCase;
 public abstract class RestSpec {
 
     private static final Map<String, String> HEADERS = Map.of(
+            "Content-Type", "application/json",
             "Accept", "application/json",
             "api-key", "ABC12345");
 

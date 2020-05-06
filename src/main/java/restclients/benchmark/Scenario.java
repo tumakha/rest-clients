@@ -18,17 +18,20 @@ import static restclients.client.model.HttpMethod.*;
 @Component
 public class Scenario implements ResourceReader {
 
-  @Value("classpath:POST.json")
-  private Resource postBody;
+    @Value("classpath:POST.json")
+    private Resource postBody;
 
-  public List<ApiRequest> getRequests() throws IOException {
-    Map<String, String> headers = Map.of("Accept", "application/json");
+    public List<ApiRequest> getRequests() throws IOException {
+        Map<String, String> headers = Map.of(
+                "Content-Type", "application/json",
+                "Accept", "application/json"
+        );
 
-    return List.of(
-        new ApiRequest(GET, new URL("https://postman-echo.com/get?foo1=bar1&foo2=bar2"), headers, null),
-        new ApiRequest(POST, new URL("https://postman-echo.com/post"), headers, asString(postBody)),
-        new ApiRequest(DELETE, new URL("https://www.upwork.com/api"), null, "{\"force\": \"true\"}")
-    );
-  }
+        return List.of(
+                //new ApiRequest(GET, new URL("https://postman-echo.com/get?foo1=bar1&foo2=bar2"), headers, null),
+                new ApiRequest(POST, new URL("https://postman-echo.com/post"), headers, asString(postBody)),
+                new ApiRequest(DELETE, new URL("https://www.upwork.com/api"), null, "{\"force\": \"true\"}")
+        );
+    }
 
 }

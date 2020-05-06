@@ -1,22 +1,36 @@
 package restclients.client;
 
 import restclients.client.model.ApiResponse;
+import restclients.client.model.HttpMethod;
 
-import java.io.IOException;
+import java.io.Closeable;
 import java.net.URL;
 import java.util.Map;
+
+import static restclients.client.model.HttpMethod.*;
 
 /**
  * @author Yuriy Tumakha
  */
-public interface RestClient {
+public interface RestClient extends Closeable {
 
-  String getName();
+    String getName();
 
-  ApiResponse get(URL url, Map<String, String> headers) throws IOException;
+    ApiResponse send(HttpMethod method, URL url, Map<String, String> headers, String body);
 
-  ApiResponse post(URL url, Map<String, String> headers, String body) throws IOException;
+    default ApiResponse get(URL url, Map<String, String> headers) {
+        return send(GET, url, headers, null);
+    }
 
-  ApiResponse delete(URL url, Map<String, String> headers, String body) throws IOException;
+    default ApiResponse post(URL url, Map<String, String> headers, String body) {
+        return send(POST, url, headers, body);
+    }
+
+    default ApiResponse delete(URL url, Map<String, String> headers, String body) {
+        return send(DELETE, url, headers, body);
+    }
+
+    default void close() {
+    }
 
 }

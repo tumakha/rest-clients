@@ -1,5 +1,6 @@
 package restclients.client.impl.java;
 
+import lombok.SneakyThrows;
 import restclients.client.RestClient;
 import restclients.client.model.ApiResponse;
 import restclients.client.model.HttpMethod;
@@ -16,7 +17,6 @@ import static java.lang.System.lineSeparator;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
-import static restclients.client.model.HttpMethod.*;
 
 /**
  * @author Yuriy Tumakha
@@ -28,22 +28,9 @@ public class SimpleJavaClient implements RestClient {
         return "Java HttpURLConnection";
     }
 
+    @SneakyThrows
     @Override
-    public ApiResponse get(URL url, Map<String, String> headers) throws IOException {
-        return send(GET, url, headers, null);
-    }
-
-    @Override
-    public ApiResponse post(URL url, Map<String, String> headers, String body) throws IOException {
-        return send(POST, url, headers, body);
-    }
-
-    @Override
-    public ApiResponse delete(URL url, Map<String, String> headers, String body) throws IOException {
-        return send(DELETE, url, headers, body);
-    }
-
-    private ApiResponse send(HttpMethod method, URL url, Map<String, String> headers, String body) throws IOException {
+    public ApiResponse send(HttpMethod method, URL url, Map<String, String> headers, String body) {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method.name());
         ofNullable(headers).ifPresent(map -> map.forEach(connection::setRequestProperty));
@@ -51,6 +38,7 @@ public class SimpleJavaClient implements RestClient {
         return getResponse(connection);
     }
 
+    @SneakyThrows
     private void setRequestBody(HttpURLConnection connection, String body) {
         connection.setUseCaches(false);
         connection.setDoInput(true);
@@ -58,8 +46,6 @@ public class SimpleJavaClient implements RestClient {
 
         try (OutputStream os = connection.getOutputStream()) {
             os.write(body.getBytes(UTF_8));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

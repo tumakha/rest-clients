@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import restclients.benchmark.model.TimeStats;
+import restclients.client.impl.java11.Java11HttpClient;
 import restclients.client.model.ApiRequest;
 import restclients.client.RestClient;
 import restclients.client.impl.java.SimpleJavaClient;
@@ -40,22 +41,24 @@ public class PerformanceBenchmark implements CommandLineRunner {
     REPORT_WRITER.println("REST Client,Request name,Threads,Requests,Total duration,Time per request,Min,Avg,Max");
 
     testClient(new SimpleJavaClient());
-    //testClient(new SimpleJavaClient());
+    testClient(new Java11HttpClient());
 
     REPORT_WRITER.close();
   }
 
   private void testClient(RestClient restClient) {
-    System.out.println(restClient.getName());
-    requestRunner.setRestClient(restClient);
+    try (restClient) {
+      System.out.println(restClient.getName());
+      requestRunner.setRestClient(restClient);
 
-    for (ApiRequest request : requests) {
-      sendRequests(request, 4, 8);
-//      sendRequests(request, 1, 1_000);
-//      sendRequests(request, 2, 1_000);
-//      sendRequests(request, 4, 1_000);
+      for (ApiRequest request : requests) {
+        sendRequests(request, 4, 8);
+//        sendRequests(request, 1, 100);
+//        //sendRequests(request, 2, 100);
+//        sendRequests(request, 4, 1_000);
+      }
+      REPORT_WRITER.flush();
     }
-    REPORT_WRITER.flush();
   }
 
   private void sendRequests(ApiRequest request, int threads, int requestsNum) {
