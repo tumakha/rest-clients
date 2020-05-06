@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import restclients.benchmark.model.TimeStats;
 import restclients.client.impl.asynchttpclient.AsyncHttpRestClient;
 import restclients.client.impl.java11.Java11HttpClient;
+import restclients.client.impl.spring.SpringWebClient;
 import restclients.client.model.ApiRequest;
 import restclients.client.RestClient;
 import restclients.client.impl.java.SimpleJavaClient;
@@ -44,6 +45,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
     testClient(new SimpleJavaClient());
     testClient(new Java11HttpClient());
     testClient(new AsyncHttpRestClient());
+    testClient(new SpringWebClient());
 
     REPORT_WRITER.close();
   }

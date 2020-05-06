@@ -23,10 +23,11 @@ bootJar {
 }
 
 dependencies {
-	// AsyncHttpClient
-	// compile platform('org.asynchttpclient:async-http-client-bom:2.12.1')
-	implementation 'org.asynchttpclient:async-http-client:2.12.1'
+	implementation 'org.asynchttpclient:async-http-client:2.12.1' // AsyncHttpClient
+	implementation 'org.springframework.boot:spring-boot-starter-webflux' // Spring Reactive WebClient
 
+
+	// Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

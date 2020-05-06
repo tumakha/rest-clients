@@ -12,6 +12,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.hamcrest.core.StringContains.containsStringIgnoringCase;
 
 /**
@@ -32,7 +33,7 @@ public abstract class RestSpec {
         ApiResponse response = client.get(new URL(url), HEADERS);
 
         assertThat(response.getCode(), equalTo(HTTP_OK));
-        assertThat(response.getBody(), allOf(containsStringIgnoringCase("\"foo2\":\"bar2\""),
+        assertThat(response.getBody(), allOf(containsString("\"foo2\":\"bar2\""),
                 containsStringIgnoringCase("\"Accept\":\"application/json\"")));
     }
 
@@ -43,9 +44,9 @@ public abstract class RestSpec {
         ApiResponse response = client.post(new URL(url), HEADERS, requestBody);
 
         assertThat(response.getCode(), equalTo(HTTP_OK));
-        assertThat(response.getBody(), allOf(containsStringIgnoringCase("\"param1\":\"value1\""),
+        assertThat(response.getBody(), allOf(containsString("\"param1\":\"value1\""),
                 containsStringIgnoringCase("\"api-key\":\"ABC12345\""),
-                containsStringIgnoringCase(requestBody)));
+                containsString(requestBody)));
     }
 
     @Test
@@ -55,9 +56,9 @@ public abstract class RestSpec {
         ApiResponse response = client.delete(new URL(url), HEADERS, requestBody);
 
         assertThat(response.getCode(), equalTo(HTTP_OK));
-        assertThat(response.getBody(), allOf(containsStringIgnoringCase("\"force\":\"true\""),
+        assertThat(response.getBody(), allOf(containsString("\"force\":\"true\""),
                 containsStringIgnoringCase("\"Accept\":\"application/json\""),
-                containsStringIgnoringCase(requestBody)));
+                containsString(requestBody)));
     }
 
 }
