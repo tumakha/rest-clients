@@ -57,6 +57,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
         sendRequests(request, 1, 100);
         //sendRequests(request, 2, 100);
         sendRequests(request, 8, 100);
+        sendRequestsNonBlocking(request, 8, 100);
       }
       REPORT_WRITER.flush();
     }
@@ -66,8 +67,16 @@ public class PerformanceBenchmark implements CommandLineRunner {
     TimeStats stats = requestRunner.run(request, threads, requestsNum);
 
     REPORT_WRITER.println(format("%s,%s,%d,%d,%d,%d,%.3f,%.3f,%.3f",
-        requestRunner.getRestClient().getName(), request.getName(), threads, requestsNum,
-        stats.getTotalTime(), stats.getTimePerRequest(), stats.getMin(), stats.getAvg(), stats.getMax()));
+            requestRunner.getRestClient().getName(), request.getName(), threads, requestsNum,
+            stats.getTotalTime(), stats.getTimePerRequest(), stats.getMin(), stats.getAvg(), stats.getMax()));
+  }
+
+  private void sendRequestsNonBlocking(ApiRequest request, int threads, int requestsNum) {
+    TimeStats stats = requestRunner.runNonBlocking(request, threads, requestsNum);
+
+    REPORT_WRITER.println(format("%s,%s,%d,%d,%d,%d,%.3f,%.3f,%.3f",
+            requestRunner.getRestClient().getName(), request.getName() + " Non-blocking", threads, requestsNum,
+            stats.getTotalTime(), stats.getTimePerRequest(), stats.getMin(), stats.getAvg(), stats.getMax()));
   }
 
 }

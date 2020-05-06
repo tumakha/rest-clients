@@ -12,8 +12,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static java.util.Optional.ofNullable;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.asynchttpclient.Dsl.*;
+import static org.asynchttpclient.Dsl.asyncHttpClient;
 
 /**
  * @author Yuriy Tumakha
@@ -29,9 +28,8 @@ public class AsyncHttpRestClient implements RestClient {
         return "AsyncHttpClient";
     }
 
-    @SneakyThrows
     @Override
-    public ApiResponse send(HttpMethod method, URL url, Map<String, String> headers, String body) {
+    public CompletableFuture<ApiResponse> sendAsync(HttpMethod method, URL url, Map<String, String> headers, String body) {
         BoundRequestBuilder requestBuilder = asyncHttpClient
                 .prepare(method.name(), url.toString())
                 .setRequestTimeout(TIMEOUT_MILLISECONDS)
@@ -40,12 +38,8 @@ public class AsyncHttpRestClient implements RestClient {
         ofNullable(headers).ifPresent(map -> map.forEach(requestBuilder::setHeader));
         ofNullable(body).ifPresent(requestBuilder::setBody);
 
-        CompletableFuture<ApiResponse> completableFuture = requestBuilder.execute().toCompletableFuture()
-                .exceptionally(e -> {
-                    throw new RuntimeException(e);
-                })
+        return requestBuilder.execute().toCompletableFuture()
                 .thenApply(r -> new ApiResponse(r.getStatusCode(), r.getResponseBody()));
-        return completableFuture.get(TIMEOUT_MILLISECONDS, MILLISECONDS);
     }
 
     @SneakyThrows

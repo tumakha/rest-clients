@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static java.lang.System.lineSeparator;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -36,6 +37,11 @@ public class SimpleJavaClient implements RestClient {
         ofNullable(headers).ifPresent(map -> map.forEach(connection::setRequestProperty));
         ofNullable(body).ifPresent(str -> setRequestBody(connection, str));
         return getResponse(connection);
+    }
+
+    @Override
+    public CompletableFuture<ApiResponse> sendAsync(HttpMethod method, URL url, Map<String, String> headers, String body) {
+        return CompletableFuture.supplyAsync(() -> send(method, url, headers, body));
     }
 
     @SneakyThrows

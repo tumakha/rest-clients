@@ -12,14 +12,12 @@ import java.net.http.HttpClient.Version;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.time.Duration.ofSeconds;
 import static java.util.Optional.ofNullable;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static restclients.client.model.HttpMethod.GET;
@@ -28,8 +26,6 @@ import static restclients.client.model.HttpMethod.GET;
  * @author Yuriy Tumakha
  */
 public class Java11HttpClient implements RestClient {
-
-    private static final Duration TIMEOUT = ofSeconds(10);
 
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -47,7 +43,7 @@ public class Java11HttpClient implements RestClient {
 
     @SneakyThrows
     @Override
-    public ApiResponse send(HttpMethod method, URL url, Map<String, String> headers, String body) {
+    public CompletableFuture<ApiResponse> sendAsync(HttpMethod method, URL url, Map<String, String> headers, String body) {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(url.toURI()).timeout(TIMEOUT);
         ofNullable(headers).ifPresent(map -> map.forEach(requestBuilder::setHeader));
@@ -59,12 +55,8 @@ public class Java11HttpClient implements RestClient {
         }
         HttpRequest request = requestBuilder.build();
 
-        CompletableFuture<ApiResponse> completableFuture = client.sendAsync(request, BodyHandlers.ofString(UTF_8))
-                .exceptionally(e -> {
-                    throw new RuntimeException(e);
-                })
+        return client.sendAsync(request, BodyHandlers.ofString(UTF_8))
                 .thenApply(r -> new ApiResponse(r.statusCode(), r.body()));
-        return completableFuture.get(TIMEOUT.getSeconds(), SECONDS);
     }
 
     @SneakyThrows
