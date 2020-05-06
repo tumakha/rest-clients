@@ -1,5 +1,7 @@
 ## rest-clients
 
+[![Java-Gradle-CI](https://github.com/tumakha/rest-clients/workflows/Java-Gradle-CI/badge.svg)](https://github.com/tumakha/rest-clients/actions)
+
 REST clients performance test
 
 #### Prerequisites
