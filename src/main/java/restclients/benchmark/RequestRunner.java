@@ -4,16 +4,16 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import restclients.benchmark.model.TimeStats;
+import restclients.client.RestClient;
 import restclients.client.model.ApiRequest;
 import restclients.client.model.ApiResponse;
-import restclients.client.RestClient;
 import restclients.concurrent.ConcurrentRun;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import static java.util.Collections.synchronizedList;
 
 /**
  * @author Yuriy Tumakha
@@ -27,7 +27,7 @@ public class RequestRunner {
 
   private RestClient restClient;
 
-  private ApiResponse sendRequest(ApiRequest r) throws IOException {
+  private ApiResponse sendRequest(ApiRequest r) {
     switch (r.getMethod()) {
       case GET:
         return restClient.get(r.getUrl(), r.getHeaders());
@@ -40,7 +40,7 @@ public class RequestRunner {
     }
   }
 
-  private CompletableFuture<ApiResponse> sendRequestAsync(ApiRequest r) throws IOException {
+  private CompletableFuture<ApiResponse> sendRequestAsync(ApiRequest r) {
     switch (r.getMethod()) {
       case GET:
         return restClient.getAsync(r.getUrl(), r.getHeaders());
@@ -54,7 +54,7 @@ public class RequestRunner {
   }
 
   public TimeStats run(ApiRequest r, int threads, int requestsNum) {
-    final List<Long> clientTime = Collections.synchronizedList(new ArrayList<>());
+    final List<Long> clientTime = synchronizedList(new ArrayList<>());
 
     long startTestTime = System.nanoTime();
 
@@ -83,8 +83,8 @@ public class RequestRunner {
   }
 
   public TimeStats runNonBlocking(ApiRequest r, int threads, int requestsNum) {
-    final List<Long> clientTime = Collections.synchronizedList(new ArrayList<>());
-    final List<CompletableFuture<ApiResponse>> futures = Collections.synchronizedList(new ArrayList<>());
+    final List<Long> clientTime = synchronizedList(new ArrayList<>());
+    final List<CompletableFuture<ApiResponse>> futures = synchronizedList(new ArrayList<>());
 
     long startTestTime = System.nanoTime();
 
