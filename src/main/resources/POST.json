@@ -1,0 +1,15 @@
+{
+  "request-id": "req-number-1",
+  "data": [
+    {
+      "field1": "some string",
+      "field2": 1234.5,
+      "field3": true
+    },
+    {
+      "field1": "another string",
+      "field2": 5678.5,
+      "field3": false
+    }
+  ]
+}

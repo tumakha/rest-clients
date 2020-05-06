@@ -3,12 +3,12 @@ package restclients.benchmark;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import restclients.client.ApiRequest;
+import restclients.benchmark.model.TimeStats;
+import restclients.client.model.ApiRequest;
 import restclients.client.RestClient;
-import restclients.client.java.SimpleJavaClient;
+import restclients.client.impl.java.SimpleJavaClient;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -35,7 +35,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
   }
 
   @Override
-  public void run(String... args) throws MalformedURLException {
+  public void run(String... args) throws IOException {
     requests = scenario.getRequests();
     REPORT_WRITER.println("REST Client,Request name,Threads,Requests,Total duration,Time per request,Min,Avg,Max");
 
@@ -50,7 +50,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
     requestRunner.setRestClient(restClient);
 
     for (ApiRequest request : requests) {
-      sendRequests(request, 4, 40);
+      sendRequests(request, 4, 8);
 //      sendRequests(request, 1, 1_000);
 //      sendRequests(request, 2, 1_000);
 //      sendRequests(request, 4, 1_000);

@@ -1,4 +1,4 @@
-package restclients.benchmark;
+package restclients.benchmark.model;
 
 import lombok.Value;
 

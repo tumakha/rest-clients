@@ -1,4 +1,4 @@
-package restclients.client;
+package restclients.client.model;
 
 import lombok.Value;
 

@@ -3,8 +3,9 @@ package restclients.benchmark;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import restclients.client.ApiRequest;
-import restclients.client.ApiResponse;
+import restclients.benchmark.model.TimeStats;
+import restclients.client.model.ApiRequest;
+import restclients.client.model.ApiResponse;
 import restclients.client.RestClient;
 import restclients.concurrent.ConcurrentRun;
 
