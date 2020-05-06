@@ -20,7 +20,7 @@ public class ConcurrentRun {
 
         executor.shutdown();
         try {
-            executor.awaitTermination(15, SECONDS);
+            executor.awaitTermination(60, SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -52,10 +52,9 @@ public class PerformanceBenchmark implements CommandLineRunner {
       requestRunner.setRestClient(restClient);
 
       for (ApiRequest request : requests) {
-        sendRequests(request, 4, 8);
-//        sendRequests(request, 1, 100);
-//        //sendRequests(request, 2, 100);
-//        sendRequests(request, 4, 1_000);
+        sendRequests(request, 1, 100);
+        //sendRequests(request, 2, 100);
+        sendRequests(request, 4, 100);
       }
       REPORT_WRITER.flush();
     }

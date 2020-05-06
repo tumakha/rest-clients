@@ -67,7 +67,7 @@ public class Java11HttpClient implements RestClient {
     @Override
     public void close() {
         executor.shutdown();
-        executor.awaitTermination(15, SECONDS);
+        executor.awaitTermination(50, SECONDS);
     }
 
 }
