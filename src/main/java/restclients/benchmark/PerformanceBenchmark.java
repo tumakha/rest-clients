@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import restclients.benchmark.model.TimeStats;
+import restclients.client.impl.apache.ApacheHttpAsyncClient;
 import restclients.client.impl.asynchttpclient.AsyncHttpRestClient;
 import restclients.client.impl.java11.Java11HttpClient;
 import restclients.client.impl.spring.SpringWebClient;
@@ -13,6 +14,7 @@ import restclients.client.impl.java.SimpleJavaClient;
 
 import java.io.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.String.format;
 
@@ -24,6 +26,7 @@ import static java.lang.String.format;
 public class PerformanceBenchmark implements CommandLineRunner {
 
   private static final String REPORT_FILENAME = "rest-clients-performance.csv";
+  private static final AtomicInteger I = new AtomicInteger();
 
   private final PrintWriter REPORT_WRITER = new PrintWriter(new BufferedWriter(new FileWriter(new File(REPORT_FILENAME))));
   private List<ApiRequest> requests;
@@ -46,13 +49,14 @@ public class PerformanceBenchmark implements CommandLineRunner {
     testClient(new Java11HttpClient());
     testClient(new AsyncHttpRestClient());
     testClient(new SpringWebClient());
+    testClient(new ApacheHttpAsyncClient());
 
     REPORT_WRITER.close();
   }
 
   private void testClient(RestClient restClient) {
     try (restClient) {
-      System.out.println(restClient.getName());
+      System.out.println(I.incrementAndGet() + ". " + restClient.getName());
       requestRunner.setRestClient(restClient);
 
       for (ApiRequest request : requests) {

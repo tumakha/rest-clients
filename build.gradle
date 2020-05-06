@@ -25,6 +25,7 @@ bootJar {
 dependencies {
 	implementation 'org.asynchttpclient:async-http-client:2.12.1' // AsyncHttpClient
 	implementation 'org.springframework.boot:spring-boot-starter-webflux' // Spring Reactive WebClient
+	implementation 'org.apache.httpcomponents:httpasyncclient:4.1.4' // Apache HttpAsyncClient
 
 
 	// Spring Boot
