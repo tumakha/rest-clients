@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import restclients.benchmark.model.TimeStats;
+import restclients.client.impl.akka.AkkaRestClient;
 import restclients.client.impl.apache.ApacheHttpAsyncClient;
 import restclients.client.impl.apache.ApacheHttpClient;
 import restclients.client.impl.asynchttpclient.AsyncHttpRestClient;
@@ -56,6 +57,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
     testClient(new ApacheHttpClient());
     testClient(new OkHttpRestClient());
     testClient(new JettyHttpClient());
+    testClient(new AkkaRestClient());
 
     REPORT_WRITER.close();
     System.exit(0);

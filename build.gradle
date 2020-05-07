@@ -30,6 +30,9 @@ dependencies {
 	implementation 'com.squareup.okhttp3:okhttp:4.6.0' // OkHttp
 	implementation 'org.eclipse.jetty:jetty-client:9.4.28.v20200408' // Jetty
 
+	// Akka HTTP
+	implementation 'com.typesafe.akka:akka-http_2.12:10.1.11'
+	implementation 'com.typesafe.akka:akka-stream_2.12:2.6.5'
 
 	// Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
