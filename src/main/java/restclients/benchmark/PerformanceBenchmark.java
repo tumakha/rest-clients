@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import restclients.benchmark.model.TimeStats;
 import restclients.client.impl.apache.ApacheHttpAsyncClient;
+import restclients.client.impl.apache.ApacheHttpClient;
 import restclients.client.impl.asynchttpclient.AsyncHttpRestClient;
 import restclients.client.impl.java11.Java11HttpClient;
 import restclients.client.impl.spring.SpringWebClient;
@@ -50,8 +51,10 @@ public class PerformanceBenchmark implements CommandLineRunner {
     testClient(new AsyncHttpRestClient());
     testClient(new SpringWebClient());
     testClient(new ApacheHttpAsyncClient());
+    testClient(new ApacheHttpClient());
 
     REPORT_WRITER.close();
+    System.exit(0);
   }
 
   private void testClient(RestClient restClient) {
