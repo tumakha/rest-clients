@@ -28,6 +28,7 @@ dependencies {
 	implementation 'org.apache.httpcomponents:httpasyncclient:4.1.4' // Apache HttpAsyncClient
 	implementation 'org.apache.httpcomponents:httpclient:4.5.12' // Apache HttpClient
 	implementation 'com.squareup.okhttp3:okhttp:4.6.0' // OkHttp
+	implementation 'org.eclipse.jetty:jetty-client:9.4.28.v20200408' // Jetty
 
 
 	// Spring Boot

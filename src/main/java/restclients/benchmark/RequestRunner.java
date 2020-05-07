@@ -109,7 +109,7 @@ public class RequestRunner {
     double min = clientTime.stream().mapToLong(l -> l).min().getAsLong() / NANO_TO_MILLI;
     double max = clientTime.stream().mapToLong(l -> l).max().getAsLong() / NANO_TO_MILLI;
 
-    System.out.println(String.format("%s Non-blocking %d requests by %d threads in %d ms = per request: %d ms. " +
+    System.out.println(String.format("%s Non-Blocking %d requests by %d threads in %d ms = per request: %d ms. " +
                     "Request time (ms): min = %.3f, avg = %.3f, max = %.3f",
             r.getName(), requestsNum, threads, totalTime, avgPerRequest, min, avg, max));
     return new TimeStats(totalTime, avgPerRequest, min, avg, max);

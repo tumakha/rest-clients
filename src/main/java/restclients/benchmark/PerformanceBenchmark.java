@@ -8,6 +8,7 @@ import restclients.client.impl.apache.ApacheHttpAsyncClient;
 import restclients.client.impl.apache.ApacheHttpClient;
 import restclients.client.impl.asynchttpclient.AsyncHttpRestClient;
 import restclients.client.impl.java11.Java11HttpClient;
+import restclients.client.impl.jetty.JettyHttpClient;
 import restclients.client.impl.okhttp.OkHttpRestClient;
 import restclients.client.impl.spring.SpringWebClient;
 import restclients.client.model.ApiRequest;
@@ -43,7 +44,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
   }
 
   @Override
-  public void run(String... args) throws IOException {
+  public void run(String... args) throws Exception {
     requests = scenario.getRequests();
     REPORT_WRITER.println("REST Client,Request name,Threads,Requests,Total duration,Time per request,Min,Avg,Max");
 
@@ -54,6 +55,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
     testClient(new ApacheHttpAsyncClient());
     testClient(new ApacheHttpClient());
     testClient(new OkHttpRestClient());
+    testClient(new JettyHttpClient());
 
     REPORT_WRITER.close();
     System.exit(0);
@@ -86,7 +88,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
     TimeStats stats = requestRunner.runNonBlocking(request, threads, requestsNum);
 
     REPORT_WRITER.println(format("%s,%s,%d,%d,%d,%d,%.3f,%.3f,%.3f",
-            requestRunner.getRestClient().getName(), request.getName() + " Non-blocking", threads, requestsNum,
+            requestRunner.getRestClient().getName(), request.getName() + " Non-Blocking", threads, requestsNum,
             stats.getTotalTime(), stats.getTimePerRequest(), stats.getMin(), stats.getAvg(), stats.getMax()));
   }
 
