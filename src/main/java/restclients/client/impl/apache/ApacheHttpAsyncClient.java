@@ -32,6 +32,7 @@ public class ApacheHttpAsyncClient implements RestClient, ApacheClient {
     }
 
     @SneakyThrows
+    @Override
     public ApiResponse send(HttpMethod method, URL url, Map<String, String> headers, String body) {
         final HttpUriRequest request = buildRequest(method, url, headers, body);
 

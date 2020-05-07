@@ -50,7 +50,7 @@ public class Java11HttpClient implements RestClient {
 
         if (method == GET) {
             requestBuilder.GET();
-        } else if (body != null) {
+        } else {
             requestBuilder.method(method.name(), BodyPublishers.ofString(body, UTF_8));
         }
         HttpRequest request = requestBuilder.build();
