@@ -53,8 +53,6 @@ public class AkkaRestClient implements RestClient {
     }
     return request;
   }
-  //HttpRequest.POST("https://userservice.example/users")
-  //  .withEntity(HttpEntities.create(ContentTypes.TEXT_PLAIN_UTF8, "data"));
 
   private HttpRequest createHttpRequest(HttpMethod method, URL url) {
     switch (method) {
