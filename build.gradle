@@ -22,6 +22,12 @@ bootJar {
 	archiveFileName = 'rest-clients.jar'
 }
 
+test {
+	testLogging {
+		showStandardStreams = true
+	}
+}
+
 dependencies {
 	implementation 'org.asynchttpclient:async-http-client:2.12.1' // AsyncHttpClient
 	implementation 'org.springframework.boot:spring-boot-starter-webflux' // Spring Reactive WebClient
