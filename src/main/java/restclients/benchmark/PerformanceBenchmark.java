@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import restclients.benchmark.model.TimeStats;
+import restclients.benchmark.util.ConsoleSupport;
 import restclients.client.impl.akka.AkkaRestClient;
 import restclients.client.impl.apache.ApacheHttpAsyncClient;
 import restclients.client.impl.apache.ApacheHttpClient;
@@ -27,7 +28,7 @@ import static java.lang.String.format;
  * @author Yuriy Tumakha
  */
 @Component
-public class PerformanceBenchmark implements CommandLineRunner {
+public class PerformanceBenchmark implements CommandLineRunner, ConsoleSupport {
 
   private static final String REPORT_FILENAME = "rest-clients-performance.csv";
   private static final AtomicInteger I = new AtomicInteger();
@@ -65,7 +66,7 @@ public class PerformanceBenchmark implements CommandLineRunner {
 
   private void testClient(RestClient restClient) {
     try (restClient) {
-      System.out.println(I.incrementAndGet() + ". " + restClient.getName());
+      System.out.println(MAGENTA + I.incrementAndGet() + ". " + restClient.getName() + RESET);
       requestRunner.setRestClient(restClient);
 
       for (ApiRequest request : requests) {

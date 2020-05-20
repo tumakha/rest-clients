@@ -1,4 +1,4 @@
-package restclients.benchmark;
+package restclients.benchmark.util;
 
 import org.springframework.core.io.Resource;
 

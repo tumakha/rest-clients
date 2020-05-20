@@ -3,6 +3,7 @@ package restclients.benchmark;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import restclients.benchmark.util.ResourceReader;
 import restclients.client.model.ApiRequest;
 
 import java.io.IOException;
