@@ -21,8 +21,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class AkkaRestClient implements RestClient {
 
-  final ActorSystem system = ActorSystem.create();
-  final Http http = Http.get(system);
+  private final ActorSystem system = ActorSystem.create();
+  private final Http http = Http.get(system);
 
   @Override
   public String getName() {
