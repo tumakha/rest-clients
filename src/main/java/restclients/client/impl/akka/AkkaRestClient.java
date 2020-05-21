@@ -75,4 +75,9 @@ public class AkkaRestClient implements RestClient {
         });
   }
 
+  @Override
+  public void close() {
+    system.terminate();
+  }
+
 }
