@@ -66,7 +66,7 @@ public class PerformanceBenchmark implements CommandLineRunner, ConsoleSupport {
 
   private void testClient(RestClient restClient) {
     try (restClient) {
-      System.out.println(MAGENTA + I.incrementAndGet() + ". " + restClient.getName() + RESET);
+      System.out.println(GREEN + I.incrementAndGet() + ". " + restClient.getName() + RESET);
       requestRunner.setRestClient(restClient);
 
       for (ApiRequest request : requests) {

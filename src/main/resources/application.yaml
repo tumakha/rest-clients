@@ -12,4 +12,5 @@ management.endpoints.web.exposure.include:
 
 logging.level:
   org.springframework: WARN
-
+  org: WARN
+  com: WARN
